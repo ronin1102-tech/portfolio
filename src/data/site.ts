@@ -74,7 +74,7 @@ export const projects: Project[] = [
     body: [
       'SolsticeDocs is a PDF workspace for people whose coursework arrives as a hundred scanned files. It is a Tauri 2 app: a React 19 frontend, a Rust shell, and SQLite for everything that persists. Local-first is a build rule here rather than a slogan — no CDN assets, no webfonts, no telemetry, no updater calling home — so the application behaves the same on a plane as it does online.',
       'The storage core is the part worth reading. Bundled rusqlite, WAL journaling, migrations keyed on user_version, tables for documents, annotations and coursework, and an async SHA-256 import path so large files never block the interface. Every native call crosses a single IPC seam, which also means the whole frontend runs in Chrome against a shim. That was a practical decision, not a preference: the build machine is on an old macOS where the webview renders white, an upstream bug recorded in an ADR instead of papered over.',
-      'Phase two is done and measured, with p50 and p95 timings on the IPC commands. The PDF renderer, annotation canvas and write path come next; annotations are designed to be non-destructive, so the file you imported is never the file being edited.',
+      'Phase three is closed as well: annotations are written non-destructively, so the file you imported is never the file being edited, and export stamps a separate annotated copy. Phase two’s p50 and p95 timings on the IPC commands still hold, and the import → annotate → relaunch → export path was checked on the target hardware rather than only in a headless harness — which is how a letter-sized geometry assumption in the export got caught on real A4 coursework.',
     ],
     size: 'small',
   },

@@ -315,12 +315,16 @@ the height of the experience list.
    A selfie taken at arm's length, framed tight; a shot from further back would
    suit the plate better and is expected. Both pages now render it at 320 px
    (280 on a phone) from `Portrait.tsx`.
-5. **Deployment is split.** The site is live on Freebuff Sites and the source is
-   on GitHub (`ronin1102-tech/portfolio`, private). A Cloudflare Workers build is
-   configured but not connected; analytics ships dark (no token). The contact
-   form delivers only once `RESEND_API_KEY` exists on whichever host runs the
-   Worker — until then it answers 503 and points at the email address rather
-   than pretending to have sent something.
+5. **Live on Cloudflare, but not deployed from Git.** The site is published at
+   `portfolio.ronin1102.workers.dev` (the owner's Workers account) and the source
+   is public at `ronin1102-tech/portfolio`. `RESEND_API_KEY` is set there as a
+   Worker **secret**, and real delivery was verified on 24 October 2026: three
+   submissions accepted by Resend and received in the owner's inbox. Two gaps
+   remain and both need the owner's dashboard: Workers Builds is not connected to
+   the repo (no check run is reported on any commit, and a push does not
+   redeploy), and the deployed build is `c306cce` while HEAD is newer, so
+   `/api/health` on the live Worker still returns bare `{"ok":true}` without the
+   `mail` block. Analytics ships dark (no token).
 6. **`solstice-website` is not shown.** Its README is one line and it has no
    description.
 7. **Private repos are excluded entirely**: `solstice-agent`, `silky-`,
@@ -364,7 +368,12 @@ engineering roles.
     sender as `reply_to`. Still no database — nothing is stored, so there is no
     submission history to leak or maintain.
 17. Analytics stays dark: no token supplied, integration left in the bundle.
-18. Preview only. No Sites publish and no custom domain until a separate go.
+18. ~~Preview only. No Sites publish and no custom domain until a separate go.~~
+    Superseded on 24 October 2026: published on Cloudflare Workers at
+    `portfolio.ronin1102.workers.dev` on the owner's go. The Freebuff Sites
+    preview was used before that and is no longer the canonical URL. Still no
+    custom domain, and the sending side stays on Resend's sandbox sender until a
+    domain is verified there.
 
 ## 7. Sign-off
 
