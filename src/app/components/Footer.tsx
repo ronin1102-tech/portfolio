@@ -1,4 +1,4 @@
-import { useState, type FormEvent } from 'react'
+import { useRef, useState, type FormEvent } from 'react'
 
 import { site } from '../../data/site'
 import { analytics, type ConsentDecision } from '../lib/analytics'
@@ -8,15 +8,18 @@ import { useLocalTime } from './Nav'
 
 export function Footer() {
   const time = useLocalTime()
-  const [form, setForm] = useState({ name: '', email: '', message: '' })
+  const [form, setForm] = useState({ name: '', email: '', message: '', website: '' })
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
   const [consent, setConsent] = useState<ConsentDecision | null>(() => analytics.getConsent())
+  // The Worker drops anything submitted faster than a person could type it.
+  const openedAt = useRef(Date.now())
 
   async function submit(e: FormEvent) {
     e.preventDefault()
     setState('sending')
-    const response = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) })
+    const payload = { ...form, elapsedMs: Date.now() - openedAt.current }
+    const response = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(payload) })
     if (response.ok) {
       analytics.contactSubmitted()
       setState('done')
@@ -55,13 +58,28 @@ export function Footer() {
                 <p className="mt-2 text-[15px] text-muted">I read everything myself and reply within two days.</p>
               </div>
             ) : (
-              <form onSubmit={submit} className="flex flex-col gap-3">
+              <form onSubmit={submit} className="relative flex flex-col gap-3">
+                {/* Honeypot: off-screen, skipped by keyboard and screen readers.
+                    People never see it; the scripts that fill every input do. */}
+                <div className="pointer-events-none absolute -left-[9999px] top-0 h-0 w-0 overflow-hidden" aria-hidden="true">
+                  <label htmlFor="contact-website">Website</label>
+                  <input
+                    id="contact-website"
+                    name="website"
+                    type="text"
+                    tabIndex={-1}
+                    autoComplete="off"
+                    value={form.website}
+                    onChange={(e) => setForm({ ...form, website: e.target.value })}
+                  />
+                </div>
                 <div className="grid gap-3 sm:grid-cols-2">
-                  <input required placeholder="Your name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
-                  <input required type="email" placeholder="Email" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
+                  <input required maxLength={80} placeholder="Your name" className={field} value={form.name} onChange={(e) => setForm({ ...form, name: e.target.value })} />
+                  <input required type="email" maxLength={200} placeholder="Email" className={field} value={form.email} onChange={(e) => setForm({ ...form, email: e.target.value })} />
                 </div>
                 <textarea
                   required
+                  maxLength={4000}
                   placeholder="A few words about the project"
                   className={`${field} h-auto min-h-[140px] resize-none py-4`}
                   value={form.message}

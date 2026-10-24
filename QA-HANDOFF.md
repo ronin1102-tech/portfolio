@@ -188,6 +188,26 @@ the height of the experience list.
 - `index.html` title and description now carry the real name and role instead
   of the template's "Your Name".
 
+### Contact delivery (24 October 2026)
+
+- `/api/contact` now sends the message through Resend from the Worker. The
+  sender goes in `reply_to`, so hitting reply in the inbox answers the person
+  who wrote in, not the sandbox sender.
+- Validation is unchanged on the surface — the same two error strings — with
+  added length caps (80/200/4000) and a 400 for a body that will not parse.
+- Spam: an off-screen honeypot named `website`, a 1.2 s floor between page load
+  and submit, and a 5-per-minute rate limit keyed on the client address. The
+  first two answer 200 and drop the message on purpose; telling a script it
+  failed only invites a retry.
+- No database. Nothing is stored, so there is no submission history to lose.
+- Provider errors are logged, never returned: a 502 carries "try again, or email
+  me" and keeps Resend's reason (which can name the account) out of the browser.
+- `tests/contact-form.test.ts` records the outbound request instead of sending
+  it: 14 tests over delivery, escaping, header injection, both validation paths,
+  the traps, the missing-key path and the provider failure. The happy path is
+  asserted against the payload Resend would receive — real delivery still needs
+  a key.
+
 ---
 
 ## 3. Routes to cover
@@ -247,8 +267,16 @@ the height of the experience list.
 ### Contact form
 - [ ] Invalid email → inline error, no crash.
 - [ ] Empty message → inline error.
-- [ ] Valid input → success state.
-- [ ] Known: the Worker validates and acknowledges only. **No message is emailed or stored**, so QA should not file "the email never arrived" as a bug in this pass.
+- [ ] Valid input with `RESEND_API_KEY` set → success state, and the message
+      arrives in the inbox named by `CONTACT_TO` (default: the address in
+      `src/data/site.ts`) with the sender in `reply_to`.
+- [ ] Valid input **without** the key → the form says it is not connected yet and
+      gives the email address instead. It must not claim success.
+- [ ] Submitting within a second of page load is dropped silently (bot floor);
+      a honeypot field named `website` exists off-screen and is skipped by Tab.
+- [ ] A seventh submission in a minute from one address → 429 with a retry
+      message (Cloudflare only; the limiter is guarded because not every host
+      provides the binding).
 
 ### Analytics (pre-existing integration, not changed here)
 - [ ] No `VITE_POSTHOG_*` env → no requests, no errors.
@@ -277,9 +305,14 @@ the height of the experience list.
    removed rather than left praising nothing.
 4. **The portrait is Tracy's own, and it is a placeholder by the owner's words.**
    A selfie taken at arm's length, framed tight; a shot from further back would
-   suit the About plate better and is expected. Home still shows it at 460 px.
-5. **Nothing is deployed.** The contact form acknowledges only, analytics ships
-   dark (no token), and publishing awaits a separate go.
+   suit the plate better and is expected. Both pages now render it at 320 px
+   (280 on a phone) from `Portrait.tsx`.
+5. **Deployment is split.** The site is live on Freebuff Sites and the source is
+   on GitHub (`ronin1102-tech/portfolio`, private). A Cloudflare Workers build is
+   configured but not connected; analytics ships dark (no token). The contact
+   form delivers only once `RESEND_API_KEY` exists on whichever host runs the
+   Worker — until then it answers 503 and points at the email address rather
+   than pretending to have sent something.
 6. **`solstice-website` is not shown.** Its README is one line and it has no
    description.
 7. **Private repos are excluded entirely**: `solstice-agent`, `silky-`,
@@ -318,8 +351,10 @@ engineering roles.
 
 **Operational**
 
-16. Contact form stays acknowledgement-only for this pass. At deploy it forwards
-    to ronin1102@gmail.com and must not store submissions in D1; provider TBD.
+16. ~~Contact form stays acknowledgement-only for this pass.~~ Superseded on
+    24 October 2026: it forwards to ronin1102@gmail.com through Resend, with the
+    sender as `reply_to`. Still no database — nothing is stored, so there is no
+    submission history to leak or maintain.
 17. Analytics stays dark: no token supplied, integration left in the bundle.
 18. Preview only. No Sites publish and no custom domain until a separate go.
 

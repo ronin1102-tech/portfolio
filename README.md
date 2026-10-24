@@ -26,10 +26,40 @@ bun run build      # dist/client (assets) + dist/portfolio/index.js (Worker)
 - `src/styles.css` holds the tokens: a paper canvas, ink text, one electric
   accent, Bricolage Grotesque for display type. Everything rounded is a
   squircle via `corner-shape`; true circles use `.round`.
-- `src/worker/index.ts` receives the contact form at `/api/contact`. Forward
-  it to your inbox with an email API (key in Sites → Secrets) or save it to D1.
+- `src/worker/index.ts` receives the contact form at `/api/contact` and emails
+  it to you through Resend. See [Contact form](#contact-form) to switch it on.
 
 Motion respects `prefers-reduced-motion`, and the preloader runs once per tab.
+
+## Contact form
+
+The Worker validates the form, drops obvious bots, then sends the message to
+your inbox with a `reply_to` of whoever wrote it. It needs one secret:
+
+| Variable | Kind | What it is |
+| --- | --- | --- |
+| `RESEND_API_KEY` | secret | API key from resend.com. Never a build variable — the browser never sees it. |
+| `CONTACT_FROM` | optional var | Sender, e.g. `Site <form@yourdomain.dev>`. Defaults to Resend's sandbox sender. |
+| `CONTACT_TO` | optional var | Where enquiries land. Defaults to the address in `src/data/site.ts`. |
+
+Until the domain is verified in Resend, the sandbox sender `onboarding@resend.dev`
+can only deliver to the address the Resend account was created with — which is
+fine when that address is the one in `src/data/site.ts`. Verify a domain and set
+`CONTACT_FROM` to send from your own.
+
+Set the secret on whichever host runs the Worker: **Cloudflare** → the Worker →
+Settings → Variables & Secrets → add `RESEND_API_KEY` as a *secret*; **Freebuff
+Sites** → Sites → Secrets. Without it the route answers 503 and the form tells
+the visitor to email directly, so a half-configured deploy loses no messages
+silently.
+
+What keeps bots out: a honeypot field no person can see, a floor on how fast the
+form can be filled, and a per-address rate limit of 5 a minute (`ratelimits` in
+`wrangler.jsonc`, guarded so hosts without the binding still work).
+
+```sh
+bun test tests/contact-form.test.ts
+```
 
 ## Deploy
 
