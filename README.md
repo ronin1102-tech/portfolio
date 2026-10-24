@@ -31,7 +31,39 @@ bun run build      # dist/client (assets) + dist/portfolio/index.js (Worker)
 
 Motion respects `prefers-reduced-motion`, and the preloader runs once per tab.
 
-## Deploy with Freebuff Sites
+## Deploy
+
+`bun run build` emits two things: `dist/client` (the site) and
+`dist/portfolio/index.js` (the Hono Worker that answers `/api/*` and serves the
+site). Both hosting paths below use the same build.
+
+### Freebuff Sites
 
 `deploy.json` points at the build output. After `bun run build`, deploy with
 the `sites_deploy` tool from this directory.
+
+### Cloudflare Workers, deploying on push
+
+Workers Builds connects this repo to a Worker: every push to `main` builds and
+deploys. Nothing needs to run locally and no API token is stored here.
+
+1. Workers & Pages → Create application → Connect to Git → pick this repo,
+   branch `main`.
+2. Name the Worker `portfolio`. It must match `name` in `wrangler.jsonc`, or
+   the build fails before it deploys anything.
+3. Build command `bun run build`; deploy command `bunx wrangler deploy`
+   (`npx wrangler deploy`, the default, works too — Wrangler comes from
+   `devDependencies`).
+4. Root directory `/`.
+5. `VITE_POSTHOG_*` are inlined by Vite at build time, so they belong in
+   Settings → Build → Build variables, not in runtime secrets, which the
+   browser bundle never sees.
+
+Wrangler resolves the build's own output through `.wrangler/deploy/config.json`,
+so check a local build the same way CI will before pushing:
+
+```sh
+bun run build && bunx wrangler deploy --dry-run
+```
+
+That prints the asset count and the `ASSETS` binding without uploading.
