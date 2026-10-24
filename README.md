@@ -63,6 +63,9 @@ bun test tests/contact-form.test.ts
 
 ## Deploy
 
+Current deployment state, what is verified, and the from-scratch redeploy steps
+are in [HANDOFF.md](HANDOFF.md).
+
 `bun run build` emits two things: `dist/client` (the site) and
 `dist/portfolio/index.js` (the Hono Worker that answers `/api/*` and serves the
 site). Both hosting paths below use the same build.
