@@ -184,11 +184,14 @@ describe('failure handling', () => {
   test('a provider rejection becomes a 502 that does not leak the provider reason', async () => {
     mockProvider(403, { message: 'The domain is not verified for this account.' })
     const response = await post(form)
-    const body = (await response.json()) as { error: string }
+    const body = (await response.json()) as { error: string; reason: string }
 
     expect(response.status).toBe(502)
     expect(body.error).not.toContain('domain is not verified')
     expect(body.error).toContain('ronin1102@gmail.com')
+    // The code travels with the failure, because the follow-up health check may
+    // land on a different isolate and see nothing.
+    expect(body.reason).toBe('sender-domain-unverified')
   })
 })
 

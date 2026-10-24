@@ -99,9 +99,13 @@ app.post('/api/contact', async (c) => {
   if (!response.ok) {
     // Provider detail stays in the log: it can name the account and the reason.
     const detail = (await response.text()).slice(0, 500)
-    lastDelivery = { at: new Date().toISOString(), ok: false, status: response.status, reason: providerReason(response.status, detail) }
+    const reason = providerReason(response.status, detail)
+    lastDelivery = { at: new Date().toISOString(), ok: false, status: response.status, reason }
     console.error('[contact] resend rejected the message', response.status, detail)
-    return c.json({ error: `Could not send that. Try again, or email me at ${site.email}.` }, 502)
+    // The reason travels with the failure as well. `/api/health` alone is not
+    // enough: an isolate is one of many, so the request that failed and the
+    // health check that follows it are not guaranteed to share it.
+    return c.json({ error: `Could not send that. Try again, or email me at ${site.email}.`, reason }, 502)
   }
 
   const { id } = (await response.json().catch(() => ({ id: undefined }))) as { id?: string }
