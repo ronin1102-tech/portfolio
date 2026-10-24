@@ -33,14 +33,14 @@ export function Preloader() {
       {show && (
         <motion.div
           key="preloader"
-          className="fixed inset-0 z-[100] flex items-end justify-between bg-fg p-6 text-bg sm:p-10"
+          className="fixed inset-0 z-[100] flex items-end justify-between bg-surface-2 p-6 text-fg sm:p-10"
           exit={{ y: '-100%' }}
           transition={{ duration: 0.8, ease: [0.76, 0, 0.24, 1] }}
         >
           <motion.p initial={{ opacity: 0, y: 10 }} animate={{ opacity: 1, y: 0 }} transition={{ duration: 0.5, delay: 0.1 }} className="font-display text-[28px] sm:text-[40px]">
             {site.name}
           </motion.p>
-          <p className="font-display tabular-nums text-[80px] leading-none sm:text-[140px]">{count}</p>
+          <p className="font-display tabular-nums text-[80px] leading-none text-accent sm:text-[140px]">{count}</p>
         </motion.div>
       )}
     </AnimatePresence>

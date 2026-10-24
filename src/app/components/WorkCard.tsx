@@ -3,6 +3,7 @@ import { useRef, useState } from 'react'
 import { Link } from 'react-router'
 
 import type { Project } from '../../data/site'
+import { analytics } from '../lib/analytics'
 import { cx } from '../lib/cx'
 import { Parallax } from './motion'
 
@@ -26,6 +27,7 @@ export function WorkCard({ project, index = 0 }: { project: Project; index?: num
         className="group relative block"
         onMouseEnter={() => setHover(true)}
         onMouseLeave={() => setHover(false)}
+        onClick={() => analytics.projectOpened({ slug: project.slug, index, placement: 'home_grid' })}
         onMouseMove={(e) => {
           const rect = ref.current?.getBoundingClientRect()
           if (!rect) return

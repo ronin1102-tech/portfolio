@@ -1,8 +1,9 @@
 import { motion } from 'motion/react'
-import { ArrowLeft, ArrowUpRight } from 'lucide-react'
 import { Link, Navigate, useParams } from 'react-router'
 
 import { bySlug, projects } from '../../data/site'
+import { analytics } from '../lib/analytics'
+import { ArrowBack, ArrowOut } from '../components/icons'
 import { Lines, Parallax, Reveal } from '../components/motion'
 
 const ease = [0.22, 1, 0.36, 1] as const
@@ -12,12 +13,13 @@ export function Work() {
   const project = slug ? bySlug(slug) : undefined
   if (!project) return <Navigate to="/" replace />
   const index = projects.findIndex((p) => p.slug === project.slug)
-  const next = projects[(index + 1) % projects.length]
+  const nextIndex = (index + 1) % projects.length
+  const next = projects[nextIndex]
 
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">
       <Link to="/#work" className="inline-flex h-9 items-center gap-1.5 text-[14px] text-muted transition-colors hover:text-fg">
-        <ArrowLeft className="size-4" />
+        <ArrowBack className="size-4" />
         All work
       </Link>
 
@@ -55,8 +57,8 @@ export function Work() {
             {project.link && (
               <div className="border-t border-line pt-3">
                 <a href={project.link} className="link-draw inline-flex items-center gap-1 font-medium">
-                  Visit the site
-                  <ArrowUpRight className="size-4" />
+                  {project.linkLabel ?? 'Visit the site'}
+                  <ArrowOut className="size-4" />
                 </a>
               </div>
             )}
@@ -72,19 +74,20 @@ export function Work() {
       </div>
 
       <div className="mt-16 grid gap-6 md:grid-cols-2">
-        <Reveal>
-          <div className="image-frame aspect-[4/3] rounded-image" style={{ background: project.tint }}>
-            <img src={project.cover} alt="" className="size-full object-cover" style={{ transform: 'scale(1.6)', transformOrigin: '30% 40%' }} />
-          </div>
-        </Reveal>
-        <Reveal delay={0.1}>
-          <div className="image-frame aspect-[4/3] rounded-image" style={{ background: project.tint }}>
-            <img src={project.cover} alt="" className="size-full object-cover" style={{ transform: 'scale(2.2)', transformOrigin: '70% 65%' }} />
-          </div>
-        </Reveal>
+        {project.details.map((src, i) => (
+          <Reveal key={src} delay={i * 0.1}>
+            <div className="image-frame aspect-[4/3] rounded-image" style={{ background: project.tint }}>
+              <img src={src} alt="" loading="lazy" className="size-full object-cover" />
+            </div>
+          </Reveal>
+        ))}
       </div>
 
-      <Link to={`/work/${next.slug}`} className="group mt-32 block border-t border-line pt-10">
+      <Link
+        to={`/work/${next.slug}`}
+        onClick={() => analytics.projectOpened({ slug: next.slug, index: nextIndex, placement: 'next_project' })}
+        className="group mt-32 block border-t border-line pt-10"
+      >
         <p className="text-[14px] text-muted">Next project</p>
         <div className="mt-3 flex items-end justify-between gap-6">
           <h2 className="font-display text-[clamp(44px,8vw,120px)] transition-transform duration-700 ease-[cubic-bezier(0.22,1,0.36,1)] group-hover:translate-x-3">{next.title}</h2>

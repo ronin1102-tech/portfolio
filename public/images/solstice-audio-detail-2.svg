@@ -1,0 +1,38 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="Solstice Audio — faders and level">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1826" /><stop offset="1" stop-color="#131120" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7c86ff" stop-opacity="0.26" />
+      <stop offset="0.6" stop-color="#7c86ff" stop-opacity="0.09" />
+      <stop offset="1" stop-color="#7c86ff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <circle cx="250" cy="760" r="480" fill="url(#glow)" />
+
+  
+    <line x1="200" y1="90" x2="200" y2="600" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4"  />
+    <rect x="148" y="250" width="104" height="52" rx="14" fill="#2a2736" stroke="#f4f1e9" stroke-width="4" />
+    <rect x="174" y="273" width="52" height="6" rx="3" fill="#f4f1e9" fill-opacity="0.25" />
+    <line x1="400" y1="90" x2="400" y2="600" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4"  />
+    <rect x="348" y="520" width="104" height="52" rx="14" fill="#2a2736" stroke="#f4f1e9" stroke-width="4" />
+    <rect x="374" y="543" width="52" height="6" rx="3" fill="#f4f1e9" fill-opacity="0.25" />
+    <line x1="600" y1="90" x2="600" y2="600" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4"  />
+    <rect x="548" y="350" width="104" height="52" rx="14" fill="#7c86ff" stroke="#f4f1e9" stroke-width="4" />
+    <rect x="574" y="373" width="52" height="6" rx="3" fill="#ffffff" fill-opacity="0.7" />
+    <line x1="800" y1="90" x2="800" y2="600" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4"  />
+    <rect x="748" y="600" width="104" height="52" rx="14" fill="#2a2736" stroke="#f4f1e9" stroke-width="4" />
+    <rect x="774" y="623" width="52" height="6" rx="3" fill="#f4f1e9" fill-opacity="0.25" />
+    <line x1="1000" y1="90" x2="1000" y2="600" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4"  />
+    <rect x="948" y="430" width="104" height="52" rx="14" fill="#2a2736" stroke="#f4f1e9" stroke-width="4" />
+    <rect x="974" y="453" width="52" height="6" rx="3" fill="#f4f1e9" fill-opacity="0.25" />
+  <rect x="150" y="740" width="26" height="40" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="208" y="716" width="26" height="88" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="266" y="690" width="26" height="140" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="324" y="660" width="26" height="200" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="382" y="685" width="26" height="150" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="440" y="712" width="26" height="96" rx="13" fill="#f4f1e9" fill-opacity="0.5" /><rect x="498" y="729" width="26" height="62" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="556" y="700" width="26" height="120" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="614" y="672" width="26" height="176" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="672" y="694" width="26" height="132" rx="13" fill="#f4f1e9" fill-opacity="0.5" /><rect x="730" y="723" width="26" height="74" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="788" y="738" width="26" height="44" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="846" y="710" width="26" height="100" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="904" y="680" width="26" height="160" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="962" y="705" width="26" height="110" rx="13" fill="#f4f1e9" fill-opacity="0.2" /><rect x="1020" y="731" width="26" height="58" rx="13" fill="#f4f1e9" fill-opacity="0.2" />
+  
+<rect width="1200" height="900" filter="url(#grain)" opacity="0.07" />
+</svg>

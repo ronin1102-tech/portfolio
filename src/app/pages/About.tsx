@@ -1,38 +1,27 @@
-import { ArrowUpRight } from 'lucide-react'
-
-import { experience, site } from '../../data/site'
-import { Lines, Parallax, Reveal } from '../components/motion'
+import { experience } from '../../data/site'
+import { Lines, Reveal } from '../components/motion'
+import { Portrait } from '../components/Portrait'
 
 export function About() {
   return (
     <article className="mx-auto max-w-[1400px] px-5 pt-28 sm:px-8 sm:pt-36">
-      <Lines as="h1" className="font-display text-balance text-[clamp(44px,7.5vw,112px)]" lines={['Designer, developer,', 'occasional typographer']} />
+      <Lines as="h1" className="font-display text-balance text-[clamp(44px,7.5vw,112px)]" lines={['Software engineer,', 'audio DSP and', 'local-first tools']} />
       <div className="mt-14 grid gap-12 lg:grid-cols-[1fr_1.3fr] lg:gap-24">
         <Reveal>
-          <Parallax src="/images/portrait.jpg" alt={site.name} className="aspect-[3/4] rounded-image" strength={6} />
-          <ul className="mt-6 flex flex-wrap gap-x-6 gap-y-2 text-[14px]">
-            {site.socials.map((s) => (
-              <li key={s.label}>
-                <a href={s.href} className="link-draw inline-flex items-center gap-1 text-muted hover:text-fg">
-                  {s.label}
-                  <ArrowUpRight className="size-3.5" />
-                </a>
-              </li>
-            ))}
-          </ul>
+          <Portrait links />
         </Reveal>
         <div>
           <Reveal className="text-pretty text-[19px] leading-relaxed sm:text-[22px]">
             <p>
-              I started out drawing letters, ended up writing code, and spent the years in between learning that the two are the same job: deciding what matters and making it clear.
+              I write software that runs on your machine: audio plugins in C++, and tools that keep your data where you left it.
             </p>
           </Reveal>
           <Reveal delay={0.1} className="mt-8 flex flex-col gap-5 text-[17px] leading-relaxed text-muted">
             <p>
-              I have worked in-house, led a team, and for the last five years worked independently with founders, product teams and a few hotels. The common thread is projects where design and build are not separate phases, and where somebody has to care about both.
+              The work splits roughly in two. Solstice Audio is a suite of audio plugins written in C++20 on JUCE — effects, instruments, and the shared DSP and interface libraries underneath them. The other half is local-first: a macOS PDF workspace in Tauri and Rust, an offline grammar checker, and an MCP server for notes where an agent can only propose changes.
             </p>
             <p>
-              I like short feedback loops, real content, and launching things before they are perfect. I dislike decks about decks. When I am not working I am usually cycling somewhere hilly or printing something by hand.
+              I build the tools I want to use, then use them daily. That is the review that has changed my mind most often, and it is why the trade-offs in these projects are about latency and file ownership rather than features.
             </p>
           </Reveal>
 
@@ -51,18 +40,6 @@ export function About() {
             </ol>
           </Reveal>
 
-          <Reveal delay={0.2} className="mt-16 grid grid-cols-3 gap-6">
-            {[
-              ['10', 'years'],
-              ['64', 'projects shipped'],
-              ['3', 'awards I mention'],
-            ].map(([value, label]) => (
-              <div key={label}>
-                <p className="font-display text-[52px] leading-none sm:text-[72px]">{value}</p>
-                <p className="mt-2 text-[14px] text-muted">{label}</p>
-              </div>
-            ))}
-          </Reveal>
         </div>
       </div>
     </article>

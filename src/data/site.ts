@@ -1,20 +1,19 @@
 // Everything about you lives here. The pages read from this file.
 
 export const site = {
-  name: 'Your Name',
-  role: 'Designer and creative developer',
-  location: 'Lisbon',
-  timezone: 'Europe/Lisbon',
-  email: 'hello@yourname.studio',
+  name: 'Tracy Weaver',
+  role: 'Software engineer — audio DSP & local-first tools',
+  location: 'Cleveland, Ohio',
+  timezone: 'America/New_York',
+  email: 'ronin1102@gmail.com',
   available: true,
-  intro: 'I design brands, products and websites for people building something worth looking at. Ten years in, still curious.',
+  intro:
+    'I build audio software and local-first tools: real-time C++ and JUCE on one side, Tauri, Rust and MCP on the other. Mostly for people who would rather own their data than rent it.',
   socials: [
-    { label: 'Instagram', href: '#' },
-    { label: 'Are.na', href: '#' },
-    { label: 'LinkedIn', href: '#' },
-    { label: 'Read.cv', href: '#' },
+    { label: 'GitHub', href: 'https://github.com/ronin1102-tech' },
+    { label: 'Instagram', href: 'https://instagram.com/solsticeaudio_dsp' },
   ],
-  marquee: ['Brand identity', 'Product design', 'Web design', 'Creative development', 'Art direction', 'Motion'],
+  marquee: ['Audio DSP', 'Real-Time C++', 'Local-First Tools', 'Desktop Apps', 'Developer Tooling', 'JUCE'],
 }
 
 export interface Project {
@@ -24,124 +23,104 @@ export interface Project {
   category: string
   year: string
   cover: string
+  /** Two 4:3 images for the case study; the cover is 1:1 and gets cropped. */
+  details: [string, string]
   tint: string
   summary: string
   role: string[]
   deliverables: string[]
   link?: string
+  linkLabel?: string
   body: string[]
   size: 'large' | 'small'
 }
 
 export const projects: Project[] = [
   {
-    slug: 'aurora',
-    title: 'Aurora',
-    client: 'Aurora Climate',
-    category: 'Brand and website',
+    slug: 'solstice-audio',
+    title: 'Solstice Audio',
+    client: 'Solstice Audio',
+    category: 'Audio software',
     year: '2026',
-    cover: '/images/aurora.jpg',
-    tint: '#efe4d8',
-    summary: 'A brand and launch site for a climate-tech company that wanted to feel like weather, not like a dashboard.',
-    role: ['Art direction', 'Identity', 'Website'],
-    deliverables: ['Identity system', 'Motion language', 'Launch site', 'Pitch deck'],
-    link: '#',
+    cover: '/images/solstice-audio.svg',
+    details: ['/images/solstice-audio-detail-1.svg', '/images/solstice-audio-detail-2.svg'],
+    tint: '#17141f',
+    summary:
+      'A suite of VST3, AU and standalone audio plugins written in C++20 on JUCE: EQ, delay, reverb, dynamics, saturation and instruments, sharing one DSP core.',
+    role: ['DSP architecture', 'Plugin interfaces', 'Build and test tooling'],
+    deliverables: ['VST3, AU and standalone builds', 'Shared engine library and UI kit', 'JUCE-free EQ test suite'],
     body: [
-      'Aurora captures carbon from the air and turns it into stone. The founders had spent two years in the lab and six months being told their brand should look like every other climate company: green, serious, full of graphs.',
-      'We went the other way. The identity is built around a single soft form that changes with light, rendered in a palette borrowed from the sky at dawn. It moves slowly on the site and sits still on paper, and it never needs a leaf.',
-      'The launch site took the company from a waitlist of 400 to 11,000 in a month, and the pitch deck helped close a Series A.',
+      'Solstice Audio is a suite of plugins written in C++20 on top of JUCE and shipped as VST3, AU and standalone builds. One CMake tree, every plugin as its own target, so a change to shared code either breaks all of them or is made once. The collection covers the working parts of a mix: a parametric EQ with dynamic bands, mid/side and slopes up to 48 dB per octave, a tempo-syncing delay, a spatial reverb, a compressor-saturator-limiter chain, four flavours of harmonic saturation, a sixteen-voice synth, and sample-based instruments.',
+      'The interesting work is the part nobody sees. A header-only UI kit holds the look and feel, presets and the sample browser; a static engine library holds whatever more than one plugin needs. The EQ core is deliberately written without JUCE so it compiles and runs as plain C++ in about two seconds, and a mutation-testing pass fails the build if a mutant survives. Shared state is what makes a suite feel like a suite instead of thirteen unrelated downloads.',
+      'Two pieces stay closed: the Astro instrument and the Orbit channel strip are flagship products, named here and nowhere else — no architecture, no parameters, no screenshots. The rest of the collection is being separated into public repositories, which is why the suite still lives behind one door.',
     ],
     size: 'large',
   },
   {
-    slug: 'meridian',
-    title: 'Meridian',
-    client: 'Meridian Bank',
-    category: 'Product design',
-    year: '2026',
-    cover: '/images/meridian.jpg',
-    tint: '#dbe0f5',
-    summary: 'Redesigning a banking app around the one question people actually have: can I afford this?',
-    role: ['Product design', 'Design system', 'Prototyping'],
-    deliverables: ['iOS and Android app', 'Design system', 'Research synthesis'],
-    body: [
-      'Meridian had a feature for everything and a home screen nobody understood. We spent a month talking to customers and heard the same thing in different words: they open the app to decide whether to spend money, and the app made that harder.',
-      'The new home screen answers that question first, in one number, then explains it. Everything else moved behind it. We rebuilt the design system in the process so the team could ship the rest without us.',
-      'App store rating went from 3.1 to 4.7 over the following two releases.',
-    ],
-    size: 'small',
-  },
-  {
-    slug: 'fold',
-    title: 'Fold',
+    slug: 'solsticedocs',
+    title: 'SolsticeDocs',
     client: 'Self-initiated',
-    category: 'Typeface',
-    year: '2025',
-    cover: '/images/fold.jpg',
-    tint: '#e8e2d6',
-    summary: 'A high-contrast serif drawn for editorial headlines, with a specimen printed by hand.',
-    role: ['Type design', 'Print'],
-    deliverables: ['Variable font, two axes', 'Letterpress specimen', 'Microsite'],
-    link: '#',
+    category: 'Desktop app',
+    year: '2026',
+    cover: '/images/solsticedocs.svg',
+    details: ['/images/solsticedocs-detail-1.svg', '/images/solsticedocs-detail-2.svg'],
+    tint: '#141826',
+    summary:
+      'A local-first macOS PDF workspace for coursework: annotations that leave the original file untouched, SQLite on disk, and no network at runtime.',
+    role: ['Product design', 'React frontend', 'Rust storage core'],
+    deliverables: ['macOS app shell', 'SQLite schema and migrations', 'IPC layer between Rust and React'],
+    link: 'https://github.com/ronin1102-tech/SolsticeDocs',
+    linkLabel: 'View on GitHub',
     body: [
-      'Fold started as a sketch of an S that would not sit still. Two years later it is a two-axis variable family with a display cut that leans into its own awkwardness.',
-      'The specimen was printed on a Vandercook in an afternoon with a friend who knows what he is doing. The impression you can feel on the paper is the whole point.',
+      'SolsticeDocs is a PDF workspace for people whose coursework arrives as a hundred scanned files. It is a Tauri 2 app: a React 19 frontend, a Rust shell, and SQLite for everything that persists. Local-first is a build rule here rather than a slogan — no CDN assets, no webfonts, no telemetry, no updater calling home — so the application behaves the same on a plane as it does online.',
+      'The storage core is the part worth reading. Bundled rusqlite, WAL journaling, migrations keyed on user_version, tables for documents, annotations and coursework, and an async SHA-256 import path so large files never block the interface. Every native call crosses a single IPC seam, which also means the whole frontend runs in Chrome against a shim. That was a practical decision, not a preference: the build machine is on an old macOS where the webview renders white, an upstream bug recorded in an ADR instead of papered over.',
+      'Phase two is done and measured, with p50 and p95 timings on the IPC commands. The PDF renderer, annotation canvas and write path come next; annotations are designed to be non-destructive, so the file you imported is never the file being edited.',
     ],
     size: 'small',
   },
   {
-    slug: 'halcyon',
-    title: 'Halcyon',
-    client: 'Halcyon Hotels',
-    category: 'Website',
-    year: '2025',
-    cover: '/images/halcyon.jpg',
-    tint: '#ebe3d6',
-    summary: 'A booking site for a small group of hotels that feels like checking in, not checking out.',
-    role: ['Design', 'Development'],
-    deliverables: ['Website', 'Booking flow', 'CMS'],
-    link: '#',
+    slug: 'local-writing-assistant',
+    title: 'Local Writing Assistant',
+    client: 'Self-initiated',
+    category: 'Privacy tooling',
+    year: '2026',
+    cover: '/images/local-writing-assistant.svg',
+    details: ['/images/local-writing-assistant-detail-1.svg', '/images/local-writing-assistant-detail-2.svg'],
+    tint: '#131c17',
+    summary:
+      'A grammar checker that keeps your drafts on your machine: LanguageTool on localhost, a launcher that manages it, and a Chrome extension that suggests rather than rewrites.',
+    role: ['Systems integration', 'Chrome extension', 'Install and launcher tooling'],
+    deliverables: ['Pinned, checksum-verified engine setup', 'Double-clickable launcher', 'Chrome MV3 extension'],
+    link: 'https://github.com/ronin1102-tech/grammar-tool',
+    linkLabel: 'View on GitHub',
     body: [
-      'Halcyon runs four hotels in buildings that are each a hundred years old. Their old site was a template with a booking widget bolted on, and it looked like every other hotel.',
-      'We built something slower. Big photography, long scrolling pages that tell you about the neighbourhood before they tell you about the rooms, and a booking flow with three steps instead of nine.',
-      'Direct bookings rose 38% in the first quarter, which is the number the owners cared about.',
+      'Most grammar checkers work by sending your half-finished draft to somebody else’s server. This one does not. LanguageTool runs on a pinned JDK, bound to localhost only, and nothing leaves the machine — a property you can verify in the build rather than a promise in a privacy policy.',
+      'Three pieces hold it together. The engine: installed by a script that downloads exact pinned versions, checksums both artifacts, patches the JDK for the older macOS target, then boots the server and runs one real grammar check as a smoke test. The launcher: a double-clickable applet that starts the engine, reports when it is ready, and offers stop or restart on reopening. The extension: a thin MV3 client that pulls the text out of the field you are editing, underlines findings, and applies a fix only when you click it.',
+      'It runs on macOS 10.15 and the last Chrome that supports it, with no admin password — a tarball JDK instead of a cask, nothing installed system-wide. Getting there was most of the work, and the install path is as much the product as the checker is.',
+    ],
+    size: 'small',
+  },
+  {
+    slug: 'mnemo',
+    title: 'Mnemo',
+    client: 'Self-initiated',
+    category: 'Developer tooling',
+    year: '2026',
+    cover: '/images/mnemo.svg',
+    details: ['/images/mnemo-detail-1.svg', '/images/mnemo-detail-2.svg'],
+    tint: '#1e1611',
+    summary:
+      'A local-first second brain: notes stay as plain Markdown in a folder you own, and AI agents can only propose changes. A human decides what lands.',
+    role: ['Protocol design', 'Safety model', 'Canvas interface'],
+    deliverables: ['MCP server and admin CLI', 'Proposal and approval model', 'Helix canvas view'],
+    link: 'https://github.com/ronin1102-tech/Mnemo',
+    linkLabel: 'View on GitHub',
+    body: [
+      'Mnemo keeps notes as plain Markdown in a folder, then puts an MCP server in front of it so agents can read them and propose edits. The server is stdio only — no ports, no network — and when it runs read-only it registers no write tools at all.',
+      'The design question was what an agent is allowed to do unattended. The answer is nothing. A write becomes a proposal on disk with a diff, a client name and a timestamp; there is no approve tool over MCP and no bypass flag. Every note a proposal depends on is hash-checked at approval, so if one of them changed, the proposal goes stale and nothing is applied. Paths are jailed to the vault, symlinks rejected, deletions move to trash, and writes are atomic: temporary file, fsync, rename, then fsync the directory.',
+      'Reading is where the value sits. Full-text search over titles, tags and bodies with BM25 ranking, backlinks that show the linking line, N-hop neighbourhoods, and a structural similarity score that explains which links, linkers and tags it counted. The Helix view draws the vault on canvas and is built to hold sixty frames a second on a browser several years old.',
     ],
     size: 'large',
-  },
-  {
-    slug: 'nocturne',
-    title: 'Nocturne',
-    client: 'Vela Records',
-    category: 'Art direction',
-    year: '2024',
-    cover: '/images/nocturne.jpg',
-    tint: '#d8d4e4',
-    summary: 'A visual identity for a debut album that had to work as a vinyl sleeve, a stage and a four-second loop.',
-    role: ['Art direction', 'Motion'],
-    deliverables: ['Album artwork', 'Live visuals', 'Social system'],
-    body: [
-      'The record is dark, slow and strangely warm. The visuals are liquid captured at macro scale, lit so the colour only appears where it catches the light.',
-      'The same footage runs behind the band on stage and loops in nine-by-sixteen on the socials. One idea, every surface.',
-    ],
-    size: 'small',
-  },
-  {
-    slug: 'kite',
-    title: 'Kite',
-    client: 'Kite Outdoors',
-    category: 'E-commerce',
-    year: '2024',
-    cover: '/images/kite.jpg',
-    tint: '#d9e6dc',
-    summary: 'A storefront for an outdoor brand that sells fewer, better things, and wanted the site to say so.',
-    role: ['Design', 'Development'],
-    deliverables: ['Storefront', 'Campaign system', 'Email templates'],
-    link: '#',
-    body: [
-      'Kite makes eleven products. Most outdoor sites are built for eleven thousand. We designed a store that treats each product like a chapter, with campaign photography shot on seamless colour so the range reads as one family.',
-      'Conversion rate doubled against the previous site, with roughly half the pages.',
-    ],
-    size: 'small',
   },
 ]
 
@@ -149,43 +128,26 @@ export const bySlug = (slug: string) => projects.find((p) => p.slug === slug)
 
 export const services = [
   {
-    title: 'Brand identity',
-    body: 'Naming, identity systems, guidelines and the motion that makes them feel alive. Built to be used by your team, not just admired by mine.',
+    title: 'Audio DSP & plugins',
+    body: 'Real-time audio in C++20 on JUCE: DSP architecture, effects and instruments, and the shared engine behind a whole suite. VST3, AU and standalone builds, with the core math written so it can be tested away from the framework.',
   },
   {
-    title: 'Product design',
-    body: 'Research, flows, interface and design systems for apps and software. I work inside the product team, in your tools, at your pace.',
+    title: 'Desktop apps',
+    body: 'Local-first desktop software with Tauri, Rust and React. SQLite on disk, no telemetry, no network at runtime, and an interface that still behaves when the connection is gone.',
   },
   {
-    title: 'Websites',
-    body: 'Marketing sites, storefronts and editorial platforms, designed and built. Fast, accessible, and easy to keep updated without me.',
-  },
-  {
-    title: 'Creative development',
-    body: 'The interactive and generative layer: WebGL, motion, shaders and the small details that make a site feel considered.',
+    title: 'Local-first developer tooling',
+    body: 'MCP servers, CLIs and agent workflows where the human keeps the last word. Plain files you own, proposal-only writes, and nothing leaving the machine unless you ask it to.',
   },
 ]
 
-export const testimonials = [
-  {
-    quote: 'The rare designer who can hold the whole thing in their head: the brand, the product, the code. We shipped in half the time and it looks twice as good.',
-    name: 'Lena Fischer',
-    role: 'Founder, Aurora Climate',
-  },
-  {
-    quote: 'Every review ended with us removing something. I have never worked with anyone so good at taking things away.',
-    name: 'Charlotte Ng',
-    role: 'Head of Digital, Meridian Bank',
-  },
-  {
-    quote: 'Our site finally feels like our hotels. Guests mention it at check-in.',
-    name: 'Jonas Weber',
-    role: 'Owner, Halcyon Hotels',
-  },
-]
+// The one private piece that is represented without a name, a repo or a detail.
+export const alsoBuilt = 'Private local AI agent system — built from scratch, used daily, no repo.'
+
+export const testimonials: { quote: string; name: string; role: string }[] = []
 
 export const experience = [
-  { period: '2021 to now', title: 'Independent', detail: 'Brand, product and web for startups and studios' },
-  { period: '2018 to 2021', title: 'Design lead, Fathom', detail: 'Led a team of six across analytics products' },
-  { period: '2015 to 2018', title: 'Designer, Halcyon Studio', detail: 'Identity and editorial work for cultural clients' },
+  { period: 'Present', title: 'Founder / Lead Architect & CEO', detail: 'Solstice Audio DSP — Cleveland, OH' },
+  { period: 'Feb 2026 to Present', title: 'Process Assistant', detail: 'Amazon — Euclid, OH' },
+  { period: 'Aug 2022 to Feb 2026', title: 'Process Guide', detail: 'Amazon — Euclid, OH' },
 ]

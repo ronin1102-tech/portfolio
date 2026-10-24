@@ -1,0 +1,35 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="SolsticeDocs — local storage">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#161a2c" /><stop offset="1" stop-color="#101320" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#ff8a63" stop-opacity="0.26" />
+      <stop offset="0.6" stop-color="#ff8a63" stop-opacity="0.09" />
+      <stop offset="1" stop-color="#ff8a63" stop-opacity="0" />
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <circle cx="620" cy="180" r="520" fill="url(#glow)" />
+
+  <rect x="120" y="210" width="330" height="440" rx="20" fill="#2b3348" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="4" />
+  <rect x="176" y="280" width="160" height="14" rx="7" fill="#f4f1e9" fill-opacity="0.3" />
+  <rect x="176" y="318" width="90" height="11" rx="5.5" fill="#f4f1e9" fill-opacity="0.14" />
+  <line x1="176" y1="356" x2="394" y2="356" stroke="#f4f1e9" stroke-opacity="0.12" stroke-width="2"  />
+  <rect x="176" y="400" width="210" height="11" rx="5.5" fill="#f4f1e9" fill-opacity="0.16" />
+  <rect x="176" y="440" width="170" height="11" rx="5.5" fill="#f4f1e9" fill-opacity="0.16" />
+  <rect x="176" y="480" width="200" height="11" rx="5.5" fill="#ff8a63" fill-opacity="0.5" />
+  <path d="M500 430 H660" stroke="#f4f1e9" stroke-opacity="0.3" stroke-width="4" stroke-linecap="round" />
+  <path d="M636 410 l26 20 -26 20" fill="none" stroke="#f4f1e9" stroke-opacity="0.3" stroke-width="4" stroke-linecap="round" stroke-linejoin="round" />
+  
+    <path d="M760 330 v300 c0 40 78 66 170 66 s170 -26 170 -66 V330" fill="#2b3348" stroke="#f4f1e9" stroke-opacity="0.22" stroke-width="4" />
+    <ellipse cx="930" cy="330" rx="170" ry="60" fill="#2b3348" stroke="#f4f1e9" stroke-opacity="0.22" stroke-width="4" />
+    <ellipse cx="930" cy="380" rx="170" ry="52" fill="none" stroke="#f4f1e9" stroke-opacity="0.10" stroke-width="3" />
+    <ellipse cx="930" cy="430" rx="170" ry="52" fill="none" stroke="#f4f1e9" stroke-opacity="0.10" stroke-width="3" />
+  
+<rect width="1200" height="900" filter="url(#grain)" opacity="0.07" />
+</svg>

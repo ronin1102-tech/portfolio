@@ -6,3 +6,14 @@ dist
 !.dev.vars.example
 .DS_Store
 *.log
+
+# Working scratch: screenshots, verification renders, dev-server logs
+artifacts/
+.logs/
+test-results/
+
+# Local env files (PostHog project token/host, Cloudflare vars)
+.env
+.env.local
+.env.*
+!.env.example

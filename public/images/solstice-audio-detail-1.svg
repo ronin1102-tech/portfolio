@@ -1,0 +1,29 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 900" width="1200" height="900" role="img" aria-label="Solstice Audio — band detail">
+  <defs>
+    <linearGradient id="bg" x1="0" y1="0" x2="1" y2="1">
+      <stop offset="0" stop-color="#1b1826" /><stop offset="1" stop-color="#131120" />
+    </linearGradient>
+    <radialGradient id="glow" cx="0.5" cy="0.5" r="0.5">
+      <stop offset="0" stop-color="#7c86ff" stop-opacity="0.26" />
+      <stop offset="0.6" stop-color="#7c86ff" stop-opacity="0.09" />
+      <stop offset="1" stop-color="#7c86ff" stop-opacity="0" />
+    </radialGradient>
+    <filter id="grain">
+      <feTurbulence type="fractalNoise" baseFrequency="0.85" numOctaves="3" stitchTiles="stitch" />
+      <feColorMatrix type="saturate" values="0" />
+    </filter>
+  </defs>
+  <rect width="100%" height="100%" fill="url(#bg)" />
+  <circle cx="950" cy="200" r="560" fill="url(#glow)" />
+
+  <line x1="120" y1="60" x2="120" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="280" y1="60" x2="280" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="440" y1="60" x2="440" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="600" y1="60" x2="600" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="760" y1="60" x2="760" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="920" y1="60" x2="920" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="1080" y1="60" x2="1080" y2="840" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="60" y1="220" x2="1140" y2="220" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="60" y1="400" x2="1140" y2="400" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="60" y1="580" x2="1140" y2="580" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  /><line x1="60" y1="760" x2="1140" y2="760" stroke="#f4f1e9" stroke-opacity="0.075" stroke-width="1.5"  />
+  <line x1="60" y1="700" x2="1140" y2="700" stroke="#f4f1e9" stroke-opacity="0.16" stroke-width="2" stroke-dasharray="2 10" />
+  <path d="M-60 706 C10 706 40 700 70 700 C300 700 350 210 600 210 C850 210 900 700 1130 660 C1190 652 1230 648 1260 644 L1260 900 L-60 900 Z" fill="#7c86ff" fill-opacity="0.13" />
+  <path d="M-60 706 C10 706 40 700 70 700 C300 700 350 210 600 210 C850 210 900 700 1130 660 C1190 652 1230 648 1260 644" fill="none" stroke="#f4f1e9" stroke-width="6" stroke-linecap="round" />
+  <circle cx="600" cy="210" r="86" fill="none" stroke="#7c86ff" stroke-width="3" stroke-dasharray="10 12" stroke-opacity="0.7" />
+  <circle cx="600" cy="210" r="52" fill="#2a2736" stroke="#f4f1e9" stroke-width="5" />
+  <circle cx="600" cy="210" r="15" fill="#7c86ff" />
+  <line x1="600" y1="262" x2="600" y2="700" stroke="#f4f1e9" stroke-opacity="0.12" stroke-width="2" stroke-dasharray="3 9" />
+  
+<rect width="1200" height="900" filter="url(#grain)" opacity="0.07" />
+</svg>

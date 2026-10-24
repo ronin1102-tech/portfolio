@@ -41,13 +41,16 @@ export function Reveal({ children, delay = 0, className, y = 24 }: { children: R
 }
 
 /** An image that drifts slightly slower than the page while it scrolls past. */
-export function Parallax({ src, alt, className, strength = 8 }: { src: string; alt: string; className?: string; strength?: number }) {
+export function Parallax({ src, alt, className, strength = 8, zoom = 1.12 }: { src: string; alt: string; className?: string; strength?: number; zoom?: number }) {
   const ref = useRef<HTMLDivElement>(null)
   const { scrollYProgress } = useScroll({ target: ref, offset: ['start end', 'end start'] })
   const y = useTransform(scrollYProgress, [0, 1], [`-${strength}%`, `${strength}%`])
   return (
     <div ref={ref} className={cx('image-frame relative', className)}>
-      <motion.img src={src} alt={alt} style={{ y }} className="absolute inset-0 size-full scale-[1.12] object-cover" loading="lazy" />
+      {/* The overscale is what the drift travels into, so it crops the image by
+          the drift amount. A photo already framed tight to its subject can't
+          spare that, and passes zoom={1} with strength={0} to sit still. */}
+      <motion.img src={src} alt={alt} style={{ y, scale: zoom }} className="absolute inset-0 size-full object-cover" loading="lazy" />
     </div>
   )
 }

@@ -2,6 +2,7 @@ import { useEffect, useState } from 'react'
 import { Link, NavLink, useLocation } from 'react-router'
 
 import { site } from '../../data/site'
+import { analytics } from '../lib/analytics'
 import { cx } from '../lib/cx'
 
 export function useLocalTime() {
@@ -50,10 +51,11 @@ export function Nav() {
         <nav className="flex items-center gap-6">
           {link('/#work', 'Work')}
           {link('/about', 'About')}
-          <a href={`mailto:${site.email}`} className="link-draw text-[14px] text-muted transition-colors hover:text-fg">
+          <a href={`mailto:${site.email}`} onClick={() => analytics.emailClicked('nav')} className="link-draw text-[14px] text-muted transition-colors hover:text-fg">
             Contact
           </a>
-          <span className="hidden text-[13px] tabular-nums text-faint sm:inline">
+          {/* Muted, not faint: the hero's key light reaches this corner. */}
+          <span className="hidden text-[13px] tabular-nums text-muted sm:inline">
             {site.location} {time}
           </span>
         </nav>

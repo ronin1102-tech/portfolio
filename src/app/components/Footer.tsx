@@ -1,7 +1,8 @@
-import { ArrowUpRight } from 'lucide-react'
 import { useState, type FormEvent } from 'react'
 
 import { site } from '../../data/site'
+import { analytics, type ConsentDecision } from '../lib/analytics'
+import { ArrowOut } from './icons'
 import { Lines, Magnetic, Reveal } from './motion'
 import { useLocalTime } from './Nav'
 
@@ -10,12 +11,16 @@ export function Footer() {
   const [form, setForm] = useState({ name: '', email: '', message: '' })
   const [state, setState] = useState<'idle' | 'sending' | 'done' | 'error'>('idle')
   const [error, setError] = useState('')
+  const [consent, setConsent] = useState<ConsentDecision | null>(() => analytics.getConsent())
 
   async function submit(e: FormEvent) {
     e.preventDefault()
     setState('sending')
     const response = await fetch('/api/contact', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify(form) })
-    if (response.ok) setState('done')
+    if (response.ok) {
+      analytics.contactSubmitted()
+      setState('done')
+    }
     else {
       setState('error')
       setError(((await response.json()) as { error?: string }).error ?? 'Something went wrong.')
@@ -32,13 +37,13 @@ export function Footer() {
             <Lines as="h2" className="font-display text-[clamp(48px,8vw,120px)]" lines={['Let’s make', <>something <span className="text-accent">good</span></>]} />
             <Reveal delay={0.2} className="mt-8 flex flex-wrap items-center gap-x-8 gap-y-3">
               <Magnetic>
-                <a href={`mailto:${site.email}`} className="inline-flex h-14 items-center gap-2 rounded-[16px] bg-fg px-7 text-[16px] font-medium text-bg transition-colors hover:bg-[#2b2925]">
+                <a href={`mailto:${site.email}`} onClick={() => analytics.emailClicked('footer')} className="inline-flex h-14 items-center gap-2 rounded-[16px] bg-fg px-7 text-[16px] font-medium text-bg transition-colors hover:bg-accent">
                   {site.email}
-                  <ArrowUpRight className="size-4" />
+                  <ArrowOut className="size-4" />
                 </a>
               </Magnetic>
               <p className="text-[14px] text-muted">
-                {site.available ? 'Taking on projects for next quarter' : 'Fully booked at the moment'}
+                {site.available ? 'Open to full-time engineering roles' : 'Not looking right now'}
               </p>
             </Reveal>
           </div>
@@ -84,7 +89,21 @@ export function Footer() {
           <p className="text-faint sm:text-center">
             {site.location}, {time}
           </p>
-          <p className="text-faint sm:text-right">© {new Date().getFullYear()} {site.name}</p>
+          <div className="text-faint sm:text-right">
+            <p>© {new Date().getFullYear()} {site.name}</p>
+            <button
+              type="button"
+              onClick={() => {
+                const next = consent === 'granted' ? 'denied' : 'granted'
+                analytics.setConsent(next)
+                setConsent(next)
+              }}
+              aria-pressed={consent === 'granted'}
+              className="mt-2 text-[13px] underline decoration-line-strong underline-offset-4 transition-colors hover:text-fg"
+            >
+              Analytics: {consent === 'granted' ? 'on' : 'off'}
+            </button>
+          </div>
         </div>
       </div>
     </footer>
