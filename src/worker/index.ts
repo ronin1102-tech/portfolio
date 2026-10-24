@@ -25,7 +25,22 @@ const MIN_FILL_MS = 1200
 
 const app = new Hono<{ Bindings: Env }>()
 
-app.get('/api/health', (c) => c.json({ ok: true }))
+/**
+ * The outcome of the last send, kept in the isolate so it can be read back from
+ * `/api/health`. There is no database: this is for whoever is standing up the
+ * site, to see why mail is not arriving without opening the Cloudflare logs.
+ * It holds a status and a normalised reason, never the provider's message —
+ * that can name the account.
+ */
+type Delivery = { at: string; ok: boolean; status?: number; reason?: string }
+let lastDelivery: Delivery | null = null
+
+app.get('/api/health', (c) =>
+  c.json({
+    ok: true,
+    mail: { connected: Boolean(c.env.RESEND_API_KEY?.trim()), last: lastDelivery },
+  }),
+)
 
 type Form = { name?: string; email?: string; message?: string; website?: string; elapsedMs?: number }
 
@@ -83,14 +98,31 @@ app.post('/api/contact', async (c) => {
 
   if (!response.ok) {
     // Provider detail stays in the log: it can name the account and the reason.
-    console.error('[contact] resend rejected the message', response.status, (await response.text()).slice(0, 500))
+    const detail = (await response.text()).slice(0, 500)
+    lastDelivery = { at: new Date().toISOString(), ok: false, status: response.status, reason: providerReason(response.status, detail) }
+    console.error('[contact] resend rejected the message', response.status, detail)
     return c.json({ error: `Could not send that. Try again, or email me at ${site.email}.` }, 502)
   }
 
   const { id } = (await response.json().catch(() => ({ id: undefined }))) as { id?: string }
+  lastDelivery = { at: new Date().toISOString(), ok: true }
   console.info('[contact] sent', id ?? '(no id)')
   return c.json({ ok: true })
 })
+
+/**
+ * Turns a provider failure into one of a few fixed words, so the reason can be
+ * read back from `/api/health` without republishing the account's own error.
+ */
+function providerReason(status: number, body: string) {
+  const text = body.toLowerCase()
+  if (status === 401 || text.includes('api key')) return 'key-rejected'
+  if (text.includes('testing emails') || text.includes('only send')) return 'recipient-not-allowed'
+  if (text.includes('not verified') || text.includes('verify a domain')) return 'sender-domain-unverified'
+  if (status === 429 || text.includes('rate limit')) return 'rate-limited'
+  if (status === 422) return 'request-rejected'
+  return 'provider-error'
+}
 
 /** Everything from the form is untrusted text, so it is escaped before it is markup. */
 function escape(value: string) {

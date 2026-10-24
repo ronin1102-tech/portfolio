@@ -191,3 +191,61 @@ describe('failure handling', () => {
     expect(body.error).toContain('ronin1102@gmail.com')
   })
 })
+
+// Setting the key up is the step that goes wrong, and the provider's own words
+// cannot be shown to the public. These pin the read-back that replaces the log.
+describe('diagnostics', () => {
+  async function health(over: Record<string, unknown> = {}) {
+    const response = await app.request('/api/health', {}, env(over))
+    return (await response.json()) as {
+      ok: boolean
+      mail: { connected: boolean; last: { ok: boolean; status?: number; reason?: string } | null }
+    }
+  }
+
+  test('a rejection is remembered as a fixed reason, not the provider text', async () => {
+    mockProvider(403, {
+      message: 'You can only send testing emails to your own email address (owner@example.net). To send emails to other recipients…',
+    })
+    await post(form)
+
+    expect((await health()).mail.last).toMatchObject({ ok: false, status: 403, reason: 'recipient-not-allowed' })
+  })
+
+  test('the reasons distinguish a bad key, an unverified sender and a rate limit', async () => {
+    const cases: [number, string, string][] = [
+      [401, 'Missing API key', 'key-rejected'],
+      [403, 'The example.dev domain is not verified. Please add and verify your domain.', 'sender-domain-unverified'],
+      [422, 'Invalid `to` field', 'request-rejected'],
+      [429, 'Too many requests', 'rate-limited'],
+      [500, 'Internal error', 'provider-error'],
+    ]
+
+    for (const [status, message, reason] of cases) {
+      mockProvider(status, { message })
+      await post(form)
+      expect((await health()).mail.last?.reason).toBe(reason)
+    }
+  })
+
+  test('a successful send clears the last failure and reports the key as connected', async () => {
+    mockProvider(403, { message: 'Missing API key' })
+    await post(form)
+    mockProvider()
+    await post(form)
+
+    const body = await health()
+    expect(body.mail.connected).toBe(true)
+    expect(body.mail.last).toMatchObject({ ok: true })
+    expect(body.mail.last?.reason).toBeUndefined()
+  })
+
+  test('with no key, health says so before anyone tries the form', async () => {
+    mockProvider()
+    await post(form, { env: env({ RESEND_API_KEY: undefined }) })
+
+    const body = await health({ RESEND_API_KEY: undefined })
+    expect(body.ok).toBe(true)
+    expect(body.mail.connected).toBe(false)
+  })
+})
