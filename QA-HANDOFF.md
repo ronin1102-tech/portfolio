@@ -202,11 +202,19 @@ the height of the experience list.
 - No database. Nothing is stored, so there is no submission history to lose.
 - Provider errors are logged, never returned: a 502 carries "try again, or email
   me" and keeps Resend's reason (which can name the account) out of the browser.
+- The last send's outcome is kept in the isolate and reported by `/api/health`
+  as `mail.connected` plus a fixed `reason` word (`key-rejected`,
+  `recipient-not-allowed`, `sender-domain-unverified`, `request-rejected`,
+  `rate-limited`, `provider-error`). Setting a key up is where this goes wrong,
+  and the provider's own words cannot be shown to the public — this is the
+  read-back that replaces hunting through Cloudflare's logs. It is per-isolate
+  and disposable, not a submission history.
 - `tests/contact-form.test.ts` records the outbound request instead of sending
-  it: 14 tests over delivery, escaping, header injection, both validation paths,
-  the traps, the missing-key path and the provider failure. The happy path is
-  asserted against the payload Resend would receive — real delivery still needs
-  a key.
+  it: 18 tests over delivery, escaping, header injection, both validation paths,
+  the traps, the missing-key path, the provider failure and the reason mapping.
+  Real delivery was verified against the deployed Worker on 2026-10-24: three
+  submissions accepted by Resend, all three received in the owner's inbox, with
+  the honeypot still dropped and an invalid address still a 400.
 
 ---
 
@@ -222,8 +230,8 @@ the height of the experience list.
 | `/work/mnemo` | Case study + "View on GitHub". |
 | `/about` | Profile page. |
 | `/work/anything-else` | Redirects to `/`. |
-| `/api/health` | `{"ok":true}`. |
-| `POST /api/contact` | 400 on bad email or empty message, `{ok:true}` on valid. |
+| `/api/health` | `{"ok":true,"mail":{…}}` — `connected`, plus the last send's reason if it failed. |
+| `POST /api/contact` | 400 on bad email or empty message, 503 with no key, 502 if Resend refuses, `{ok:true}` on valid. |
 
 ---
 
